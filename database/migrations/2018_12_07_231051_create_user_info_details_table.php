@@ -17,9 +17,9 @@ class CreateUserInfoDetailsTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('middle_name');
-            $table->string('gender');
-            $table->string('email')->unique();
+            $table->string('middle_name')->nullable();
+            $table->enum('gender', \App\UserInfoDetails::GENDER_TYPES)->nullable();
+            $table->string('email')->unique()->nullable();
             $table->timestamps();
         });
     }

@@ -13,6 +13,9 @@ class Account extends Model
      */
     protected $fillable = [
         'user_id',
+        'name',
+        'email',
+        'password',
         'setup_progress'
     ];
 
