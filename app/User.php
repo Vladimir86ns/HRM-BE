@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -16,8 +15,33 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'user_info_detail_id'
     ];
+
+    /**
+     * Create model, create user info details.
+     *
+     * @param  array  $attributes
+     * @return $this
+     *
+     * @throws \Illuminate\Database\Eloquent\MassAssignmentException
+     */
+    public static function create(array $attributes = [])
+    {
+        $userInfoDetails = self::createUserInfo(array_only($attributes, ['first_name', 'last_name']));
+        $attributes['user_info_detail_id'] = $userInfoDetails->id;
+        $model = static::query()->create(array_only($attributes, ['password', 'user_info_detail_id']));
+
+        return $model;
+    }
+
+    public static function createUserInfo(array $attributes)
+    {
+        return UserInfoDetails::create($attributes);
+    }
 
     /**
      * The attributes that should be hidden for arrays.

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Dingo\Api\Routing\Router;
 
 /*
@@ -21,6 +20,9 @@ $api = app(Router::class);
 
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers', 'middleware' => 'api'], function (Router $api) {
-        $api->get('register-test', 'KreiramController@test');
+        // ACCOUNT
+        $api->group(['prefix' => 'account'], function ($api) {
+            $api->post('create', 'AccountController@create');
+        });
     });
 });
