@@ -18,12 +18,12 @@ class CreateCompaniesTable extends Migration
             $table->unsignedInteger('country_id');
             $table->unsignedInteger('account_id');
             $table->string('name');
-            $table->string('logo');
-            $table->string('email')->unique();
-            $table->string('website');
-            $table->string('mobile_phone');
-            $table->string('telephone_number');
-            $table->string('fax_number');
+            $table->string('logo')->nullable();
+            $table->string('email');
+            $table->string('website')->nullable();
+            $table->string('mobile_phone')->nullable();
+            $table->string('telephone_number')->nullable();
+            $table->string('fax_number')->nullable();
             $table->timestamps();
 
             $table->foreign('country_id')

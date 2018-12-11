@@ -60,6 +60,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "code-style": [
+            "phpqa --report --verbose  --analyzedDirs app,bootstrap,database,config,tests --ignoredDirs vendor,storage --tools=phpcs:0,phpmd:0"
         ]
     }
 }
