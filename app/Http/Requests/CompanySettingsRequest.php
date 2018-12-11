@@ -34,22 +34,22 @@ class CompanySettingsRequest extends FormRequest
             'company_info.*.company' => 'required',
             'company_info.*.company.name' => 'required|min:3|max:100',
             'company_info.*.company.email' => 'email|max:150,',
-            'company_info.*.company.website' => 'min:3|max:200',
-            'company_info.*.company.mobile_phone' => 'min:3|max:50',
-            'company_info.*.company.telephone_number' => 'min:1|max:50',
-            'company_info.*.company.fax_number' => 'min:1|max:100,',
+            'company_info.*.company.website' => 'max:200',
+            'company_info.*.company.mobile_phone' => 'max:50',
+            'company_info.*.company.telephone_number' => 'max:50',
+            'company_info.*.company.fax_number' => 'max:100,',
 
             'company_info.*.location' => 'required',
             'company_info.*.location.country_id' => 'required|min:3|max:100',
-            'company_info.*.location.region' => 'min:3|max:100',
-            'company_info.*.location.city' => 'min:3|max:100',
+            'company_info.*.location.region' => 'max:100',
+            'company_info.*.location.city' => 'max:100',
             'company_info.*.location.zip_code' => 'numeric|min:1|max:100000',
-            'company_info.*.location.first_address_line' => 'min:3|max:100',
-            'company_info.*.location.second_address_line' => 'min:3|max:100',
+            'company_info.*.location.first_address_line' => 'max:100',
+            'company_info.*.location.second_address_line' => 'max:100',
 
             'company_info.*.department_info' => 'required',
             'company_info.*.department_info.*.name' => 'required|min:3|max:50',
-            'company_info.*.department_info.*.description' => 'min:3|max:100',
+            'company_info.*.department_info.*.description' => 'max:100',
         ];
     }
 
