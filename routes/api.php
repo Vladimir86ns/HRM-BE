@@ -24,5 +24,10 @@ $api->version('v1', function ($api) {
         $api->group(['prefix' => 'account'], function ($api) {
             $api->post('create', 'AccountController@create');
         });
+
+        // COMPANY
+        $api->group(['prefix' => 'company'], function ($api) {
+            $api->post('save_company_settings', 'CompanyController@saveInitialCompanySettings');
+        });
     });
 });

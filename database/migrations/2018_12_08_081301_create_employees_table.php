@@ -22,17 +22,17 @@ class CreateEmployeesTable extends Migration
             $table->date('birthdate')->nullable();
             $table->integer('telephone_number')->nullable();
             $table->integer('mobile_number')->nullable();
-            $table->decimal('hours_per_day');
-            $table->date('date_hired');
+            $table->decimal('hours_per_day')->nullable();
+            $table->date('date_hired')->nullable();
             $table->date('date_ended')->nullable();
             $table->integer('location_id')->unsigned();
             $table->integer('department_id')->unsigned();
-            $table->string('country');
-            $table->string('region');
-            $table->string('city');
-            $table->decimal('zip_code');
-            $table->string('first_address_line');
-            $table->string('second_address_line');
+            $table->string('country')->nullable();
+            $table->string('region')->nullable();
+            $table->string('city')->nullable();
+            $table->decimal('zip_code')->nullable();
+            $table->string('first_address_line')->nullable();
+            $table->string('second_address_line')->nullable();
             $table->integer('position_id')->unsigned();
             $table->timestamps();
 
