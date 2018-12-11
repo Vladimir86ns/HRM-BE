@@ -32,4 +32,14 @@ class Company extends Model
     {
         $this->hasMany(User::class);
     }
+
+    public function location()
+    {
+        $this->hasOne(Location::class);
+    }
+
+    public function departments()
+    {
+        $this->hasMany(Department::class);
+    }
 }

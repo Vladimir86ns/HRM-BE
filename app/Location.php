@@ -21,5 +21,9 @@ class Location extends Model
     public $casts = [
         'is_headquarters' => 'boolean',
     ];
-}
 
+    public function company()
+    {
+        $this->hasOne(Company::class);
+    }
+}

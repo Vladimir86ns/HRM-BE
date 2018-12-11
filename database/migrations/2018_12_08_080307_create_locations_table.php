@@ -14,15 +14,15 @@ class CreateLocationsTable extends Migration
     public function up()
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->increments('id');
             $table->integer('company_id')->unsigned();
             $table->string('country');
-            $table->string('region');
-            $table->string('city');
-            $table->integer('zip_code');
-            $table->string('first_address_line');
-            $table->string('second_address_line');
+            $table->string('region')->nullable();
+            $table->string('city')->nullable();
+            $table->integer('zip_code')->nullable();
+            $table->string('first_address_line')->nullable();
+            $table->string('second_address_line')->nullable();
             $table->integer('is_headquarters')->boolean()->default(false);
             $table->timestamps();
 
