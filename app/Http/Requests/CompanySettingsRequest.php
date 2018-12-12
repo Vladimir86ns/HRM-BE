@@ -42,9 +42,9 @@ class CompanySettingsRequest extends FormRequest
             'company_info.*.location' => 'required',
             'company_info.*.location.country_id' => 'required|min:3|max:100',
             'company_info.*.location.region' => 'max:100',
-            'company_info.*.location.city' => 'max:100',
-            'company_info.*.location.zip_code' => 'numeric|min:1|max:100000',
-            'company_info.*.location.first_address_line' => 'max:100',
+            'company_info.*.location.city' => 'required|min:2|max:100',
+            'company_info.*.location.zip_code' => 'required|numeric|min:1|max:100000',
+            'company_info.*.location.first_address_line' => 'required|min:2|max:100',
             'company_info.*.location.second_address_line' => 'max:100',
 
             'company_info.*.department_info' => 'required',
@@ -65,7 +65,7 @@ class CompanySettingsRequest extends FormRequest
             'account_info.email.required'  => 'Account email is required!',
             'account_info.email.email'  => 'The account email must be a valid email address.',
             'account_info.email.unique'  => 'The account email has already been taken.',
-            'account_info.email.max'  => "The account email may not be greater than 150 characters.",
+            'account_info.email.max'  => "The account email may not be greater than 150 characters."
         ];
     }
 }
