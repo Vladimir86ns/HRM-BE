@@ -65,10 +65,7 @@ class CompanySettingsRequest extends FormRequest
             'account_info.email.required'  => 'Account email is required!',
             'account_info.email.email'  => 'The account email must be a valid email address.',
             'account_info.email.unique'  => 'The account email has already been taken.',
-            'account_info.email.max'  => "The account email may not be greater than 150 characters.",
-
-            'company.email'  => 'The company email must be a valid email address.',
-
+            'account_info.email.max'  => "The account email may not be greater than 150 characters."
         ];
     }
 }
