@@ -8,6 +8,17 @@ use App\User;
 class AccountService
 {
     /**
+     * Return account by id.
+     *
+     * @param int $accountId
+     * @return mixed
+     */
+    public function getAccountById(int $accountId)
+    {
+        return Account::find($accountId);
+    }
+
+    /**
      * Create account, and create owner user with only password.
      *
      * @param array $attributes

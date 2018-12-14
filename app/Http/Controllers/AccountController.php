@@ -39,6 +39,23 @@ class AccountController extends Controller
         $this->transformer = $accountTransformer;
     }
 
+    /**
+     * Get account by id.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getAccount($id)
+    {
+        $account = $this->validator->getAndValidateAccountById((int) $id);
+
+        return response(
+            $this->transformer->transform($account),
+            Response::HTTP_OK
+        );
+
+    }
+
     /**clear
      * Store a newly created account.
      *
