@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Account;
 use App\Http\Requests\CompanySettingsRequest;
 use App\Services\Company\CompanyService;
+use App\Validators\AccountValidator;
 use App\Validators\CompanyValidator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,14 +22,21 @@ class CompanyController extends Controller
     protected $validator;
 
     /**
+     * @var \App\Validators\AccountValidator
+     */
+    protected $accountValidator;
+
+    /**
      * CompanyController constructor.
      */
     public function __construct(
         CompanyService $companyService,
-        CompanyValidator $companyValidator
+        CompanyValidator $companyValidator,
+        AccountValidator $accountValidator
     ) {
         $this->service = $companyService;
         $this->validator = $companyValidator;
+        $this->accountValidator = $accountValidator;
     }
 
     /**
@@ -42,25 +49,23 @@ class CompanyController extends Controller
     {
         $inputs = $request->all();
 
-        // TODO on validation for account email, validate email, exclude account id
-        $errors = $this->validator->validateWithRulesAndAllCustomValidations($inputs, new CompanySettingsRequest());
+        $errors = $this->validator->validateWithRulesAndAllCustomValidations(
+            $inputs,
+            new CompanySettingsRequest($inputs)
+        );
 
         if ($errors) {
             return response($errors, Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        $account = Account::find($inputs['account_info']['account_id']);
-
-        if (!$account) {
-            return response('Account not found!', Response::HTTP_NOT_FOUND);
-        }
+        $account = $this->accountValidator->getAndValidateAccountById($inputs['account_info']['account_id']);
 
         try {
-            $this->service->saveCompanySettings($inputs);
+            $this->service->saveCompanySettings($inputs, $account);
         } catch (Exception $e) {
             response(
                 'Something went wrong, please try again later!',
-                Response::HTTP_REQUEST_ENTITY_TOO_LARGE
+                Response::HTTP_BAD_REQUEST
             );
         }
 

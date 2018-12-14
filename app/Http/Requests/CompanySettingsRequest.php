@@ -6,6 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CompanySettingsRequest extends FormRequest
 {
+    public $attributes;
+
+    /**
+     * CompanySettingsRequest constructor.
+    */
+    public function __construct(array $attributes)
+    {
+        $this->attributes = $attributes;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,10 +33,12 @@ class CompanySettingsRequest extends FormRequest
      */
     public function rules()
     {
+        $accountId = $this->attributes['account_info']['account_id'];
+
         return [
             'account_info' => 'required',
             'account_info.name' => 'required|min:3|max:100',
-            'account_info.email' => 'required|unique:accounts,email|email|max:100,',
+            'account_info.email' => 'required|unique:accounts,email,' . $accountId . '|email|max:100,',
             'account_info.account_id' => 'required|integer|min:1|max:100,',
 
             'company_info' => 'required',
