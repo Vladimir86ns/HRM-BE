@@ -2,6 +2,7 @@
 
 namespace App\Services\Company;
 
+use App\Account;
 use App\Company;
 use App\Department;
 use App\Location;
@@ -10,14 +11,17 @@ use Illuminate\Support\Facades\DB;
 class CompanyService
 {
     /**
-     * Save company data, location data and department data.
+     * Save company, location and department data. Update account if data is different
+     * then on existing account.
      *
      * @param array $attributes
      * @return string
      */
-    public function saveCompanySettings(array $attributes)
+    public function saveCompanySettings(array $attributes, Account $account)
     {
-        DB::transaction(function () use ($attributes) {
+        DB::transaction(function () use ($attributes, $account) {
+            $this->checkChangesAccountAndUpdate($attributes, $account);
+
             foreach ($attributes['company_info'] as $companyAndLocation) {
                 $companyAttributes = $this->getCompanyAttributes($companyAndLocation);
                 $companyAttributes['account_id'] = $attributes['account_info']['account_id'];
@@ -72,5 +76,35 @@ class CompanyService
     private function getDepartmentAttributes(array $companyAndLocation)
     {
         return array_only($companyAndLocation, ['name', 'description']);
+    }
+
+    /**
+     * Check account name and email and update it, if it is different.
+     *
+     * @param array $attributes
+     * @param Account $account
+     * @return Account
+     */
+    private function checkChangesAccountAndUpdate(array $attributes, Account $account)
+    {
+        $newName = $attributes['account_info']['name'];
+        $newEmail = $attributes['account_info']['email'];
+
+        $oldName = $account->name;
+        $oldEmail = $account->name;
+
+        if ($newName !== $oldName && $newEmail !== $oldEmail) {
+            $account->email = $newEmail;
+            $account->name = $newName;
+            $account->save();
+        } else if ($newEmail !== $oldEmail) {
+            $account->email = $newEmail;
+            $account->save();
+        } else if ($newName !== $oldName) {
+            $account->name = $newName;
+            $account->save();
+        }
+
+        return $account;
     }
 }
