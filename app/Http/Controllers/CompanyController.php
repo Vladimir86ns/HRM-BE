@@ -42,6 +42,7 @@ class CompanyController extends Controller
     {
         $inputs = $request->all();
 
+        // TODO on validation for account email, validate email, exclude account id
         $errors = $this->validator->validateWithRulesAndAllCustomValidations($inputs, new CompanySettingsRequest());
 
         if ($errors) {

@@ -23,6 +23,7 @@ $api->version('v1', function ($api) {
         // ACCOUNT
         $api->group(['prefix' => 'account'], function ($api) {
             $api->post('create', 'AccountController@create');
+            $api->get('/{id}', 'AccountController@getAccount');
         });
 
         // COMPANY
