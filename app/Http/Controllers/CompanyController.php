@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CompanySettingsRequest;
 use App\Services\Company\CompanyService;
+use App\Transformers\Company\CompanyTransformer;
+use App\Transformers\CustomSerializer\CustomSerializer;
 use App\Validators\AccountValidator;
 use App\Validators\CompanyValidator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+
+use League\Fractal\Manager as Fractal;
+use League\Fractal\Resource\Item;
 
 class CompanyController extends Controller
 {
@@ -27,16 +32,30 @@ class CompanyController extends Controller
     protected $accountValidator;
 
     /**
+     * @var \App\Transformers\Company\CompanyTransformer
+     */
+    protected $transformer;
+
+    /**
+     * @var \League\Fractal\Manager
+     */
+    protected $fractal;
+
+    /**
      * CompanyController constructor.
      */
     public function __construct(
         CompanyService $companyService,
         CompanyValidator $companyValidator,
-        AccountValidator $accountValidator
+        AccountValidator $accountValidator,
+        CompanyTransformer $companyTransformer,
+        Fractal $fractal
     ) {
         $this->service = $companyService;
         $this->validator = $companyValidator;
         $this->accountValidator = $accountValidator;
+        $this->transformer = $companyTransformer;
+        $this->fractal = $fractal;
     }
 
     /**
@@ -61,7 +80,7 @@ class CompanyController extends Controller
         $account = $this->accountValidator->getAndValidateAccountById($inputs['account_info']['account_id']);
 
         try {
-            $this->service->saveCompanySettings($inputs, $account);
+            $company = $this->service->saveCompanySettings($inputs, $account);
         } catch (Exception $e) {
             response(
                 'Something went wrong, please try again later!',
@@ -69,6 +88,13 @@ class CompanyController extends Controller
             );
         }
 
-        return response('Account successfully created!', Response::HTTP_OK);
+        $result = new Item($company, $this->transformer);
+        $this->fractal->parseIncludes(['location', 'departments']);
+        $this->fractal->createData($result)->toArray();
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
     }
 }

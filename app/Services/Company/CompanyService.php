@@ -19,26 +19,23 @@ class CompanyService
      */
     public function saveCompanySettings(array $attributes, Account $account)
     {
-        DB::transaction(function () use ($attributes, $account) {
+        return DB::transaction(function () use ($attributes, $account) {
             $this->checkChangesAccountAndUpdate($attributes, $account);
 
             foreach ($attributes['company_info'] as $companyAndLocation) {
                 $companyAttributes = $this->getCompanyAttributes($companyAndLocation);
-                $companyAttributes['account_id'] = $attributes['account_info']['account_id'];
-                $company = Company::create($companyAttributes);
+                $company = $account->companies()->create($companyAttributes);
 
                 $locationAttributes = $this->getLocationAttributes($companyAndLocation);
-                // TODO how to make with relation $company->location()->create($locationAttributes);
-                $locationAttributes['company_id'] = $company->id;
-                Location::create($locationAttributes);
+                $company->location()->create($locationAttributes);
 
                 foreach ($companyAndLocation['department_info'] as $department) {
                     $departmentAttributes = $this->getDepartmentAttributes($department);
-                    // TODO how to make with relation $company->departments()->create($locationAttributes);
-                    $departmentAttributes['company_id'] = $company->id;
-                    Department::create($departmentAttributes);
+                    $company->departments()->create($departmentAttributes);
                 }
             }
+
+            return $company;
         });
     }
 
