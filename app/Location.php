@@ -24,6 +24,6 @@ class Location extends Model
 
     public function company()
     {
-        $this->hasOne(Company::class);
+        return $this->hasOne(Company::class);
     }
 }

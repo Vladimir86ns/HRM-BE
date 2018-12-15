@@ -39,6 +39,7 @@ class CompanyValidator
     public function createCompanySettings(array $data, $validator)
     {
         // TODO add validation does email already exist on other company with different account id.
+        // TODO add validation company name already exist for given company id.
         return $this->validateData($data, $validator);
     }
 }

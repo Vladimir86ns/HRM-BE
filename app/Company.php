@@ -25,21 +25,21 @@ class Company extends Model
 
     public function account()
     {
-        $this->hasOne(Account::class);
+        return $this->hasOne(Account::class);
     }
 
     public function user()
     {
-        $this->hasMany(User::class);
+        return $this->hasMany(User::class);
     }
 
     public function location()
     {
-        $this->hasOne(Location::class);
+        return $this->hasOne(Location::class);
     }
 
     public function departments()
     {
-        $this->hasMany(Department::class);
+        return $this->hasMany(Department::class);
     }
 }
