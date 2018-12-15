@@ -74,6 +74,7 @@ class CompanySettingsRequest extends FormRequest
     {
         return [
             'account_info.name.required' => 'Account name is required!',
+            'account_info.name.min' => 'The account name must be at least 3 characters.',
             'account_info.email.required'  => 'Account email is required!',
             'account_info.email.email'  => 'The account email must be a valid email address.',
             'account_info.email.unique'  => 'The account email has already been taken.',
