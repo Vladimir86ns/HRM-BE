@@ -53,7 +53,6 @@ class AccountController extends Controller
             $this->transformer->transform($account),
             Response::HTTP_OK
         );
-
     }
 
     /**clear
