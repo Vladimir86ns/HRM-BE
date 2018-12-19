@@ -9,6 +9,21 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    const USER_STATUS_ACTIVE = 'active';
+    const USER_STATUS_INACTIVE = 'inactive';
+
+    const TYPE_OWNER = 'owner';
+    const TYPE_SUPER_ADMIN = 'super_admin';
+    const TYPE_ADMIN = 'admin';
+    const TYPE_EMPLOYEE = 'employee';
+
+    CONST USER_TYPES = [
+        self::TYPE_OWNER,
+        self::TYPE_SUPER_ADMIN,
+        self::TYPE_ADMIN,
+        self::TYPE_EMPLOYEE
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -18,8 +33,41 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_type',
+        'status',
         'user_info_detail_id'
     ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * Get the user's type.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getUserTypeAttribute($value)
+    {
+        return str_replace('_', ' ', $value);
+    }
+
+    /**
+     * Set the user's type.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setUserTypeAttribute($value)
+    {
+        $this->attributes['user_type'] = strtolower(str_replace(' ', '_', $value));
+    }
 
     /**
      * Create model, create user info details.
@@ -33,35 +81,41 @@ class User extends Authenticatable
     {
         $userInfoDetails = self::createUserInfo(array_only($attributes, ['first_name', 'last_name']));
         $attributes['user_info_detail_id'] = $userInfoDetails->id;
-        $model = static::query()->create(array_only($attributes, ['password', 'user_info_detail_id']));
+        $model = static::query()->create(array_only(
+            $attributes,
+            ['password', 'user_info_detail_id', 'user_type', 'status']
+        ));
 
         return $model;
     }
 
+    /**
+     * On creating user, create and user info fot that user.
+     */
     public static function createUserInfo(array $attributes)
     {
         return UserInfoDetails::create($attributes);
     }
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * Get the account record associated with the user.
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
     public function account()
     {
-        $this->hasOne(Account::class);
+        return $this->hasOne(Account::class);
     }
 
+    /**
+     * Get the user info.
+     */
     public function userInfo()
     {
-        $this->belongsTo(UserInfoDetails::class);
+        return $this->belongsTo(UserInfoDetails::class, 'user_info_detail_id');
     }
 
+    /**
+     * The companies that belong to the user.
+     */
     public function companies()
     {
         return $this->belongsToMany(

@@ -18,7 +18,8 @@ class AccountTransformer extends TransformerAbstract
         return [
             'id' => $account->id,
             'name' => $account->name,
-            'email' => $account->email
+            'email' => $account->email,
+            'user_id' => $account->user->id
         ];
     }
 }

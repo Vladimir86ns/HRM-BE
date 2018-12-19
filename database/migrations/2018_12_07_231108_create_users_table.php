@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('user_info_detail_id');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('user_type', \App\User::USER_TYPES);
+            $table->string('status')->default(\App\User::USER_STATUS_INACTIVE);
             $table->rememberToken();
             $table->timestamps();
 
