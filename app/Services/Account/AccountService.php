@@ -41,9 +41,11 @@ class AccountService
     private function getUserAttributesOnCreateAccount(array $attributes)
     {
         return [
-            'first_name' => 'test',
-            'last_name' => 'test',
-            'password' => bcrypt($attributes['password'])
+            'first_name' => '',
+            'last_name' => '',
+            'password' => bcrypt($attributes['password']),
+            'user_type' => User::TYPE_OWNER,
+            'status' => User::USER_STATUS_ACTIVE
         ];
     }
 

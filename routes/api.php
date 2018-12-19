@@ -20,6 +20,7 @@ $api = app(Router::class);
 
 $api->version('v1', function ($api) {
     $api->group(['namespace' => 'App\Http\Controllers', 'middleware' => 'api'], function (Router $api) {
+
         // ACCOUNT
         $api->group(['prefix' => 'account'], function ($api) {
             $api->post('create', 'AccountController@create');
@@ -29,6 +30,11 @@ $api->version('v1', function ($api) {
         // COMPANY
         $api->group(['prefix' => 'company'], function ($api) {
             $api->post('save_company_settings', 'CompanyController@saveInitialCompanySettings');
+        });
+
+        // USER
+        $api->group(['prefix' => 'user'], function ($api) {
+            $api->get('/{id}', 'UserController@getUser');
         });
     });
 });
