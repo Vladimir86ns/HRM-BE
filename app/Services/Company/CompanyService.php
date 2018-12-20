@@ -11,6 +11,17 @@ use Illuminate\Support\Facades\DB;
 class CompanyService
 {
     /**
+     * Get company info by id.
+     *
+     * @param int $id
+     * @return Company
+     */
+    public function getCompanyById(int $id)
+    {
+        return Company::find($id);
+    }
+
+    /**
      * Save company, location and department data. Update account if data is different
      * then on existing account.
      *
