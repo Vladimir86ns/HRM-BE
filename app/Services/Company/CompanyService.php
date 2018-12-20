@@ -22,6 +22,17 @@ class CompanyService
     }
 
     /**
+     * Get companies by account Id.
+     *
+     * @param int $accountId
+     * @return mixed
+     */
+    public function getCompanyByAccountId(int $accountId)
+    {
+        return Company::where('account_id', $accountId)->get();
+    }
+
+    /**
      * Save company, location and department data. Update account if data is different
      * then on existing account.
      *

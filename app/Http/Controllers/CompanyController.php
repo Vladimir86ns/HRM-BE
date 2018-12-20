@@ -59,6 +59,26 @@ class CompanyController extends Controller
     }
 
     /**
+     * Get company by Id.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getCompany($id)
+    {
+        $company = $this->validator->getAndValidateCompany((int) $id);
+
+        $result = new Item($company, $this->transformer);
+        $this->fractal->parseIncludes(['location', 'departments']);
+        $this->fractal->createData($result)->toArray();
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      * Save company info in DB.
      *
      * @param Request $request
@@ -66,7 +86,6 @@ class CompanyController extends Controller
      */
     public function saveCompanyInfo(Request $request)
     {
-        // TODO add validation if user has already company, cannot has 2 companies.
         $inputs = $request->all();
 
         $errors = $this->validator->validateWithRulesAndAllCustomValidations(
@@ -100,23 +119,8 @@ class CompanyController extends Controller
         );
     }
 
-    /**
-     * Get company by Id.
-     *
-     * @param $id
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
-    public function getCompany($id)
+    public function updateCompanyInfo(Request $request, $id)
     {
-        $company = $this->validator->getAndValidateCompany((int) $id);
-
-        $result = new Item($company, $this->transformer);
-        $this->fractal->parseIncludes(['location', 'departments']);
-        $this->fractal->createData($result)->toArray();
-
-        return response(
-            $this->fractal->createData($result)->toArray(),
-            Response::HTTP_OK
-        );
+        //
     }
 }
