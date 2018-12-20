@@ -66,6 +66,7 @@ class CompanyController extends Controller
      */
     public function saveCompanyInfo(Request $request)
     {
+        // TODO add validation if user has already company, cannot has 2 companies.
         $inputs = $request->all();
 
         $errors = $this->validator->validateWithRulesAndAllCustomValidations(
