@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Transformers\User\UserTransformer;
+use App\Validators\UserValidator;
 use Symfony\Component\HttpFoundation\Response;
-use App\User;
 
 class UserController extends Controller
 {
@@ -14,11 +14,19 @@ class UserController extends Controller
     protected $transformer;
 
     /**
+     * @var \App\Validators\UserValidator;
+     */
+    protected $validator;
+
+    /**
      * UserController constructor.
      */
-    public function __construct(UserTransformer $userTransformer)
-    {
+    public function __construct(
+        UserTransformer $userTransformer,
+        UserValidator $userValidator
+    ) {
         $this->transformer = $userTransformer;
+        $this->validator = $userValidator;
     }
 
     /**
@@ -29,9 +37,7 @@ class UserController extends Controller
      */
     public function getUser($id)
     {
-        // TODO add user service to get user by id
-        // TODO add validation where will validate does user exist and return user
-        $user = User::find($id);
+        $user = $this->validator->getAndValidateUserById((int) $id);
 
         return response(
             $this->transformer->transform($user),

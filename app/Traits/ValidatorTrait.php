@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ValidatorTrait
 {
@@ -22,5 +23,12 @@ trait ValidatorTrait
         }
 
         return [];
+    }
+
+    public function validateId($id)
+    {
+        if (!is_numeric($id)) {
+            abort(Response::HTTP_BAD_REQUEST, 'Id must be integer!');
+        }
     }
 }

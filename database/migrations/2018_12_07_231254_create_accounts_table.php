@@ -20,6 +20,7 @@ class CreateAccountsTable extends Migration
             $table->string('email')->unique();
             $table->string('setup_progress');
             $table->string('password');
+            $table->boolean('active')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')
