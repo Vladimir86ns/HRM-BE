@@ -29,7 +29,8 @@ $api->version('v1', function ($api) {
 
         // COMPANY
         $api->group(['prefix' => 'company'], function ($api) {
-            $api->post('save_company_settings', 'CompanyController@saveInitialCompanySettings');
+            $api->get('/{id}', 'CompanyController@getCompany');
+            $api->post('save_company_settings', 'CompanyController@saveCompanyInfo');
         });
 
         // USER

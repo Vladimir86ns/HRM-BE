@@ -55,7 +55,7 @@ class CompanySettingsRequest extends FormRequest
             'company_info.*.location.country_id' => 'required|min:3|max:100',
             'company_info.*.location.region' => 'max:100',
             'company_info.*.location.city' => 'required|min:2|max:100',
-            'company_info.*.location.zip_code' => 'required|numeric|min:1|max:100000',
+            'company_info.*.location.zip_code' => 'required|numeric|min:1|max:10000000',
             'company_info.*.location.first_address_line' => 'required|min:2|max:100',
             'company_info.*.location.second_address_line' => 'max:100',
 

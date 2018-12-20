@@ -59,12 +59,12 @@ class CompanyController extends Controller
     }
 
     /**
-     * Save company settings in DB.
+     * Save company info in DB.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function saveInitialCompanySettings(Request $request)
+    public function saveCompanyInfo(Request $request)
     {
         $inputs = $request->all();
 
@@ -82,11 +82,32 @@ class CompanyController extends Controller
         try {
             $company = $this->service->saveCompanySettings($inputs, $account);
         } catch (Exception $e) {
+            \Log::info($e->getMessage() . ' : save company info');
             response(
                 'Something went wrong, please try again later!',
                 Response::HTTP_BAD_REQUEST
             );
         }
+
+        $result = new Item($company, $this->transformer);
+        $this->fractal->parseIncludes(['location', 'departments']);
+        $this->fractal->createData($result)->toArray();
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Get company by Id.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getCompany($id)
+    {
+        $company = $this->validator->getAndValidateCompany((int) $id);
 
         $result = new Item($company, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);

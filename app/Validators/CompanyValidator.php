@@ -2,12 +2,46 @@
 
 namespace App\Validators;
 
+use App\Services\Company\CompanyService;
 use App\Traits\ValidatorTrait;
+use Symfony\Component\HttpFoundation\Response;
 use Validator;
 
 class CompanyValidator
 {
     use ValidatorTrait;
+
+    /**
+     * @var \App\Services\Company\CompanyService
+     */
+    protected $service;
+
+    /**
+     * CompanyValidator constructor.
+     */
+    public function __construct(CompanyService $companyService)
+    {
+        $this->service = $companyService;
+    }
+
+    /**
+     * Get company by id, or throw exception not found company.
+     *
+     * @param int $id
+     * @return \App\Company
+     */
+    public function getAndValidateCompany(int $id)
+    {
+        $this->validateId($id);
+
+        $company = $this->service->getCompanyById($id);
+
+        if (!$company) {
+            abort(Response::HTTP_NOT_FOUND, 'Company not found!');
+        }
+
+        return $company;
+    }
 
     /**
      * Validate response with rules, and all custom validations.
