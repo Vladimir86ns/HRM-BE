@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CompanySettingsRequest;
+use App\Http\Requests\CompanyCreateRequest;
+use App\Http\Requests\CompanyUpdateRequest;
 use App\Services\Company\CompanyService;
 use App\Transformers\Company\CompanyTransformer;
 use App\Transformers\CustomSerializer\CustomSerializer;
@@ -59,6 +60,26 @@ class CompanyController extends Controller
     }
 
     /**
+     * Get company by Id.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getCompany($id)
+    {
+        $company = $this->validator->getAndValidateCompany((int) $id);
+
+        $result = new Item($company, $this->transformer);
+        $this->fractal->parseIncludes(['location', 'departments']);
+        $this->fractal->createData($result)->toArray();
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      * Save company info in DB.
      *
      * @param Request $request
@@ -66,12 +87,11 @@ class CompanyController extends Controller
      */
     public function saveCompanyInfo(Request $request)
     {
-        // TODO add validation if user has already company, cannot has 2 companies.
         $inputs = $request->all();
 
-        $errors = $this->validator->validateWithRulesAndAllCustomValidations(
+        $errors = $this->validator->onCreateValidateWithRulesAndAllCustomValidations(
             $inputs,
-            new CompanySettingsRequest($inputs)
+            new CompanyCreateRequest($inputs)
         );
 
         if ($errors) {
@@ -101,16 +121,38 @@ class CompanyController extends Controller
     }
 
     /**
-     * Get company by Id.
+     * Update company by id.
      *
+     * @param Request $request
      * @param $id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function getCompany($id)
+    public function updateCompanyInfo(Request $request, $id)
     {
+        $inputs = $request->all();
+
         $company = $this->validator->getAndValidateCompany((int) $id);
 
-        $result = new Item($company, $this->transformer);
+        $errors = $this->validator->onUpdateValidateWithRulesAndAllCustomValidations(
+            $inputs,
+            new CompanyUpdateRequest($inputs)
+        );
+
+        if ($errors) {
+            return response($errors, Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        try {
+            $updatedCompany = $this->service->updateCompany($company, $inputs);
+        } catch (Exception $e) {
+            \Log::info($e->getMessage() . ' : Update company, location, department, account info');
+            response(
+                'Something went wrong, please try again later!',
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $result = new Item($updatedCompany, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);
         $this->fractal->createData($result)->toArray();
 

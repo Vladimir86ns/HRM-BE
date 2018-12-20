@@ -51,9 +51,22 @@ class CompanyValidator
      *
      * @return array|mixed
      */
-    public function validateWithRulesAndAllCustomValidations(array $inputs, $validator)
+    public function onCreateValidateWithRulesAndAllCustomValidations(array $inputs, $validator)
     {
-        $errors = $this->createCompanySettings($inputs, $validator);
+        $this->validateAccountAlreadyHasCompany($inputs['account_info']['account_id']);
+
+        $errors = $this->validateAttributes($inputs, $validator);
+
+        if ($errors) {
+            return $errors;
+        }
+
+        return [];
+    }
+
+    public function onUpdateValidateWithRulesAndAllCustomValidations(array $inputs, $validator)
+    {
+        $errors = $this->validateAttributes($inputs, $validator);
 
         if ($errors) {
             return $errors;
@@ -70,10 +83,19 @@ class CompanyValidator
      *
      * @return mixed
      */
-    public function createCompanySettings(array $data, $validator)
+    public function validateAttributes(array $data, $validator)
     {
         // TODO add validation does email already exist on other company with different account id.
         // TODO add validation company name already exist for given company id.
         return $this->validateData($data, $validator);
+    }
+
+    private function validateAccountAlreadyHasCompany($account_id)
+    {
+        $companies = $this->service->getCompanyByAccountId($account_id);
+
+        if ($companies->isNotEmpty()) {
+            abort(Response::HTTP_NOT_ACCEPTABLE, 'It is not possible to have more then one company!');
+        }
     }
 }
