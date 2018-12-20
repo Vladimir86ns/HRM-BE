@@ -62,6 +62,35 @@ class CompanyService
     }
 
     /**
+     * Update company, location, department and account info.
+     *
+     * @param Company $company
+     * @param array   $attributes
+     * @return Company
+     */
+    public function updateCompany(Company $company, array $attributes)
+    {
+        return DB::transaction(function () use ($attributes, $company) {
+            $this->checkChangesAccountAndUpdate($attributes, $company->account);
+
+            foreach ($attributes['company_info'] as $companyAndLocation) {
+                $companyAttributes = $this->getCompanyAttributes($companyAndLocation);
+                $company->update($companyAttributes);
+
+                $locationAttributes = $this->getLocationAttributes($companyAndLocation);
+                $company->location()->update($locationAttributes);
+
+                foreach ($companyAndLocation['department_info'] as $department) {
+                    $departmentAttributes = $this->getDepartmentAttributes($department);
+                    $company->departments()->update($departmentAttributes);
+                }
+            }
+
+            return $company;
+        });
+    }
+
+    /**
      * Get company attributes.
      *
      * @param array $companyAndLocation
@@ -106,20 +135,20 @@ class CompanyService
      */
     private function checkChangesAccountAndUpdate(array $attributes, Account $account)
     {
-        $newName = $attributes['account_info']['name'];
-        $newEmail = $attributes['account_info']['email'];
+        $newName = $attributes['account_info']['name'] ?? null;
+        $newEmail = $attributes['account_info']['email'] ?? null;
 
         $oldName = $account->name;
         $oldEmail = $account->name;
 
-        if ($newName !== $oldName && $newEmail !== $oldEmail) {
+        if ($newName && $newName !== $oldName && $newEmail !== $oldEmail) {
             $account->email = $newEmail;
             $account->name = $newName;
             $account->save();
-        } else if ($newEmail !== $oldEmail) {
+        } else if ($newEmail && $newEmail !== $oldEmail) {
             $account->email = $newEmail;
             $account->save();
-        } else if ($newName !== $oldName) {
+        } else if ($newName && $newName !== $oldName) {
             $account->name = $newName;
             $account->save();
         }
