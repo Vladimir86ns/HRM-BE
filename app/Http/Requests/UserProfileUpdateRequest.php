@@ -39,7 +39,7 @@ class UserProfileUpdateRequest extends FormRequest
         return [
             'account_id' => 'required|integer',
             'first_name' => 'required|string|min:2|max:100',
-            'middle_name' => 'string|min:2|max:100',
+            'middle_name' => 'string|min:2|max:100|nullable',
             'last_name' => 'required|string|min:2|max:100',
             'email' => 'required|unique:user_info_details,email,' . $userInfoDetailId . '|email|max:100,',
             'gender' => 'string|in:' . implode(',', User::USER_GENDER_TYPES) . '|nullable'

@@ -51,7 +51,7 @@ class UserController extends Controller
         $user = $this->validator->getAndValidateUserById((int) $id);
 
         return response(
-            $this->transformer->transform($user),
+            ['data' => $this->transformer->transform($user)],
             Response::HTTP_OK
         );
     }
@@ -84,7 +84,7 @@ class UserController extends Controller
         $updatedUser = $this->service->updateUser($user, $inputs);
 
         return response(
-            $this->transformer->transform($updatedUser),
+            ['data' => $this->transformer->transform($updatedUser)],
             Response::HTTP_OK
         );
     }

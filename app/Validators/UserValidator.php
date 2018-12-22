@@ -56,14 +56,14 @@ class UserValidator
      */
     public function onUpdateValidateWithRulesAndAllCustomValidations(array $inputs, $validator, User $user)
     {
-        $this->doesUserBelongsGivenAccountId($inputs, $user);
+        $this->doesUserBelongsGivenAccountId((int) $inputs['account_id'], $user);
         $errors = $this->validateAttributes($inputs, $validator);
 
         if ($errors) {
             return $errors;
         }
 
-        return $inputs;
+        return [];
     }
 
     /**
@@ -82,12 +82,12 @@ class UserValidator
     /**
      * Check does user belongs to the given account..
      *
-     * @param array $inputs
+     * @param int $accountId
      * @param User  $user
      */
-    private function doesUserBelongsGivenAccountId(array $inputs, User $user)
+    private function doesUserBelongsGivenAccountId(int $accountId, User $user)
     {
-        if ($user->account->id !== $inputs['account_id']) {
+        if ($accountId !== $user->account->id) {
             abort(Response::HTTP_NOT_ACCEPTABLE, 'The user does not belong to the given account!');
         }
     }
