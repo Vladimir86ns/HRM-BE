@@ -17,6 +17,16 @@ class User extends Authenticatable
     const TYPE_ADMIN = 'admin';
     const TYPE_EMPLOYEE = 'employee';
 
+    const GENDER_MALE = 'male';
+    const GENDER_FEMALE = 'female';
+    const GENDER_OTHER = 'other';
+
+    CONST USER_GENDER_TYPES = [
+        self::GENDER_MALE,
+        self::GENDER_FEMALE,
+        self::GENDER_OTHER
+    ];
+
     CONST USER_TYPES = [
         self::TYPE_OWNER,
         self::TYPE_SUPER_ADMIN,

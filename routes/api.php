@@ -37,6 +37,7 @@ $api->version('v1', function ($api) {
         // USER
         $api->group(['prefix' => 'user'], function ($api) {
             $api->get('/{id}', 'UserController@getUser');
+            $api->patch('/{id}/update', 'UserController@updateProfile');
         });
     });
 });
