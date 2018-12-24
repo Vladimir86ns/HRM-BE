@@ -7,9 +7,11 @@ use App\Http\Requests\CompanyUpdateRequest;
 use App\Services\Company\CompanyService;
 use App\Transformers\Company\CompanyTransformer;
 use App\Transformers\CustomSerializer\CustomSerializer;
+use App\Transformers\Employee\EmployeeTransformer;
 use App\Validators\AccountValidator;
 use App\Validators\CompanyValidator;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 use League\Fractal\Manager as Fractal;
@@ -38,6 +40,11 @@ class CompanyController extends Controller
     protected $transformer;
 
     /**
+     * @var \App\Transformers\Employee\EmployeeTransformer
+     */
+    protected $employeeTransformer;
+
+    /**
      * @var \League\Fractal\Manager
      */
     protected $fractal;
@@ -50,13 +57,15 @@ class CompanyController extends Controller
         CompanyValidator $companyValidator,
         AccountValidator $accountValidator,
         CompanyTransformer $companyTransformer,
-        Fractal $fractal
+        Fractal $fractal,
+        EmployeeTransformer $employeeTransformer
     ) {
         $this->service = $companyService;
         $this->validator = $companyValidator;
         $this->accountValidator = $accountValidator;
         $this->transformer = $companyTransformer;
         $this->fractal = $fractal;
+        $this->employeeTransformer = $employeeTransformer;
     }
 
     /**
@@ -154,6 +163,26 @@ class CompanyController extends Controller
 
         $result = new Item($updatedCompany, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);
+        $this->fractal->createData($result)->toArray();
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Get all company employees.
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getCompanyEmployees($id)
+    {
+        $this->validator->getAndValidateCompany((int) $id);
+        $employees = $this->service->getCompanyEmployees((int) $id);
+
+        $result = new Collection($employees, $this->employeeTransformer);
         $this->fractal->createData($result)->toArray();
 
         return response(

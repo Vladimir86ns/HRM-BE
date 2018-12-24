@@ -30,6 +30,7 @@ $api->version('v1', function ($api) {
         // COMPANY
         $api->group(['prefix' => 'company'], function ($api) {
             $api->get('/{id}', 'CompanyController@getCompany');
+            $api->get('/{id}/employees', 'CompanyController@getCompanyEmployees');
             $api->patch('/{id}', 'CompanyController@updateCompanyInfo');
             $api->post('save_company_settings', 'CompanyController@saveCompanyInfo');
         });
@@ -39,5 +40,6 @@ $api->version('v1', function ($api) {
             $api->get('/{id}', 'UserController@getUser');
             $api->patch('/{id}/update', 'UserController@updateProfile');
         });
+
     });
 });

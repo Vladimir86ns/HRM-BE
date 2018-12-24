@@ -27,4 +27,9 @@ class Employee extends Model
         'second_address_line',
         'position_id'
     ];
+
+    public function userInfoDetail()
+    {
+        return $this->belongsTo(UserInfoDetails::class, 'user_info_detail_id');
+    }
 }
