@@ -16,7 +16,6 @@ class CreateEmployeesTable extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned()->nullable();
-            $table->integer('payroll_group_id')->unsigned()->nullable();
             $table->integer('user_info_detail_id')->unsigned()->nullable();
             $table->string('company_employee_id');
             $table->string('password');
@@ -26,14 +25,8 @@ class CreateEmployeesTable extends Migration
             $table->decimal('hours_per_day')->nullable();
             $table->date('date_hired')->nullable();
             $table->date('date_ended')->nullable();
-            $table->integer('location_id')->unsigned()->nullable();
-            $table->integer('department_id')->unsigned()->nullable();
-            $table->string('country')->nullable();
-            $table->string('region')->nullable();
-            $table->string('city')->nullable();
-            $table->decimal('zip_code')->nullable();
-            $table->string('first_address_line')->nullable();
-            $table->string('second_address_line')->nullable();
+            $table->integer('location_id')->unsigned();
+            $table->integer('department_id')->unsigned();
             $table->integer('position_id')->unsigned()->nullable();
             $table->timestamps();
 
