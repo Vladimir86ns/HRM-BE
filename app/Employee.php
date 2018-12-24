@@ -32,4 +32,19 @@ class Employee extends Model
     {
         return $this->belongsTo(UserInfoDetails::class, 'user_info_detail_id');
     }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
