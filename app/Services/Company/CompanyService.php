@@ -4,8 +4,7 @@ namespace App\Services\Company;
 
 use App\Account;
 use App\Company;
-use App\Department;
-use App\Location;
+use App\Employee;
 use Illuminate\Support\Facades\DB;
 
 class CompanyService
@@ -30,6 +29,17 @@ class CompanyService
     public function getCompanyByAccountId(int $accountId)
     {
         return Company::where('account_id', $accountId)->get();
+    }
+
+    /**
+     * Get all company employees.
+     *
+     * @param int $companyId
+     * @return mixed
+     */
+    public function getCompanyEmployees(int $companyId)
+    {
+        return Employee::where('company_id', $companyId)->get();
     }
 
     /**
