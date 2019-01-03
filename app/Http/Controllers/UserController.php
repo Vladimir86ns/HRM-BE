@@ -29,6 +29,10 @@ class UserController extends Controller
 
     /**
      * UserController constructor.
+     *
+     * @param UserTransformer $userTransformer
+     * @param UserValidator   $userValidator
+     * @param UserService     $userService
      */
     public function __construct(
         UserTransformer $userTransformer,

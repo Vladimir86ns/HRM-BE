@@ -41,7 +41,13 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-    */
+     *
+     * @param AccountValidator   $accountValidator
+     * @param AccountService     $accountService
+     * @param AccountTransformer $accountTransformer
+     * @param CompanyTransformer $companyTransformer
+     * @param Fractal            $fractal
+     */
     public function __construct(
         AccountValidator $accountValidator,
         AccountService $accountService,
