@@ -36,7 +36,10 @@ class PositionController extends Controller
     /**
      * PositionController constructor.
      *
-     * @param PositionValidator $validator
+     * @param PositionValidator   $validator
+     * @param PositionService     $service
+     * @param PositionTransformer $positionTransformer
+     * @param Fractal             $fractal
      */
     public function __construct(
         PositionValidator $validator,

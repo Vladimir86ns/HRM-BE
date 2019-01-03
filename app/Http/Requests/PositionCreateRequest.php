@@ -24,15 +24,16 @@ class PositionCreateRequest extends FormRequest
     public function rules()
     {
         return [
+            'positions' => 'required',
+            'company_id' => 'required',
+            'account_id' => 'required',
+
             'positions.*.names' => 'required',
             'positions.*.names.*' => 'required|min:1',
             'positions.*.department_name' => 'required|exists:departments,name',
             'positions.*.company_name' => 'required|exists:companies,name',
             'positions.*.department_id' => 'required|exists:departments,id',
             'positions.*.company_id' => 'required|exists:companies,id',
-
-            'company_id' => 'required',
-            'account_id' => 'required',
         ];
     }
 }
