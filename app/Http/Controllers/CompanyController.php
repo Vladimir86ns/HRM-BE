@@ -51,6 +51,13 @@ class CompanyController extends Controller
 
     /**
      * CompanyController constructor.
+     *
+     * @param CompanyService      $companyService
+     * @param CompanyValidator    $companyValidator
+     * @param AccountValidator    $accountValidator
+     * @param CompanyTransformer  $companyTransformer
+     * @param Fractal             $fractal
+     * @param EmployeeTransformer $employeeTransformer
      */
     public function __construct(
         CompanyService $companyService,
@@ -80,7 +87,6 @@ class CompanyController extends Controller
 
         $result = new Item($company, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);
-        $this->fractal->createData($result)->toArray();
 
         return response(
             $this->fractal->createData($result)->toArray(),
@@ -121,7 +127,6 @@ class CompanyController extends Controller
 
         $result = new Item($company, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);
-        $this->fractal->createData($result)->toArray();
 
         return response(
             $this->fractal->createData($result)->toArray(),
@@ -163,7 +168,6 @@ class CompanyController extends Controller
 
         $result = new Item($updatedCompany, $this->transformer);
         $this->fractal->parseIncludes(['location', 'departments']);
-        $this->fractal->createData($result)->toArray();
 
         return response(
             $this->fractal->createData($result)->toArray(),
@@ -183,7 +187,6 @@ class CompanyController extends Controller
         $employees = $this->service->getCompanyEmployees((int) $id);
 
         $result = new Collection($employees, $this->employeeTransformer);
-        $this->fractal->createData($result)->toArray();
 
         return response(
             $this->fractal->createData($result)->toArray(),
