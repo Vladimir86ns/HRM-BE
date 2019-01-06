@@ -21,6 +21,11 @@ class PositionController extends Controller
     protected $validator;
 
     /**
+     * @var \App\Validators\CompanyValidator
+     */
+    protected $companyValidator;
+
+    /**
      * @var \App\Services\Position\PositionService
      */
     protected $service;
@@ -39,17 +44,20 @@ class PositionController extends Controller
      * PositionController constructor.
      *
      * @param PositionValidator   $validator
+     * @param CompanyValidator    $companyValidator
      * @param PositionService     $service
      * @param PositionTransformer $positionTransformer
      * @param Fractal             $fractal
      */
     public function __construct(
         PositionValidator $validator,
+        CompanyValidator $companyValidator,
         PositionService $service,
         PositionTransformer $positionTransformer,
         Fractal $fractal
     ) {
         $this->validator = $validator;
+        $this->companyValidator = $companyValidator;
         $this->service = $service;
         $this->transformer = $positionTransformer;
         $this->fractal = $fractal;
@@ -58,10 +66,11 @@ class PositionController extends Controller
     /**
      * Bulk save positions.
      *
+     * @param $id Company ID
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|string
      */
-    public function bulkSave(Request $request)
+    public function bulkSave($id, Request $request)
     {
         $inputs = $request->all();
         $errors = $this->validator->positionCreateValidatorRulesAndCustomValidators(
@@ -82,18 +91,43 @@ class PositionController extends Controller
         );
     }
 
+
     /**
      * Get all company positions.
      *
-     * @param                  $id company ID
-     * @param CompanyValidator $companyValidator
+     * @param $id Company ID
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function getCompanyPositions($id, CompanyValidator $companyValidator)
+    public function getPositions($id)
     {
-        $company = $companyValidator->getAndValidateCompany($id);
+        $company = $this->companyValidator->getAndValidateCompany($id);
 
         $paginator = $this->service->getAllCompanyPositionsAsPaginator($company->id);
+        $positions = $paginator->getCollection();
+
+        $result = new Collection($positions, $this->transformer);
+        $result->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Delete position by id.
+     *
+     * @param $id Company Id
+     * @param $positionId Position Id
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function deletePositions($id, $positionId)
+    {
+        $this->companyValidator->getAndValidateCompany($id);
+        $position = $this->validator->getAndValidatePositionByIdAndCompanyId($positionId, $id);
+        $position->delete();
+
+        $paginator = $this->service->getAllCompanyPositionsAsPaginator($id);
         $positions = $paginator->getCollection();
 
         $result = new Collection($positions, $this->transformer);

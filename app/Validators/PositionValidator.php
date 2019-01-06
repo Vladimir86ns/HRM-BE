@@ -5,6 +5,7 @@ namespace App\Validators;
 use App\Company;
 use App\Department;
 use App\Position;
+use App\Services\Position\PositionService;
 use App\Traits\ValidatorTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Validator;
@@ -12,6 +13,37 @@ use Validator;
 class PositionValidator
 {
     use ValidatorTrait;
+
+    /**
+     * @var \App\Services\Position\PositionService
+     */
+    protected $service;
+
+    /**
+     * PositionValidator constructor.
+     */
+    public function __construct(PositionService $positionService)
+    {
+        $this->service = $positionService;
+    }
+
+    /**
+     * Get position by id, and company Id, or throw exception not found position.
+     *
+     */
+    public function getAndValidatePositionByIdAndCompanyId(int $id, int $companyId)
+    {
+        $this->validateId($id);
+        $this->validateId($companyId);
+
+        $position = $this->service->getPositionByIdAndCompanyId($id, $companyId);
+
+        if (!$position) {
+            abort(Response::HTTP_NOT_FOUND, 'Position not found!');
+        }
+
+        return $position;
+    }
 
     /**
      * Validate create position, and all other custom validations.
