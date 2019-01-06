@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PositionCreateRequest;
 use App\Services\Position\PositionService;
 use App\Transformers\Position\PositionTransformer;
+use App\Validators\CompanyValidator;
 use App\Validators\PositionValidator;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Resource\Collection;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 
 class PositionController extends Controller
 {
@@ -73,6 +75,29 @@ class PositionController extends Controller
 
         $positions = $this->service->bulkSavePositions($inputs);
         $result = new Collection($positions, $this->transformer);
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Get all company positions.
+     *
+     * @param                  $id company ID
+     * @param CompanyValidator $companyValidator
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function getCompanyPositions($id, CompanyValidator $companyValidator)
+    {
+        $company = $companyValidator->getAndValidateCompany($id);
+
+        $paginator = $this->service->getAllCompanyPositionsAsPaginator($company->id);
+        $positions = $paginator->getCollection();
+
+        $result = new Collection($positions, $this->transformer);
+        $result->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response(
             $this->fractal->createData($result)->toArray(),

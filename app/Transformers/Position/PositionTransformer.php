@@ -19,7 +19,8 @@ class PositionTransformer extends TransformerAbstract
             'id' => $position->id,
             'name' => $position->name,
             'company_id' => $position->company_id,
-            'department_id' => $position->department_id
+            'department_id' => $position->department_id,
+            'department_name' => $position->department->name
         ];
     }
 }
