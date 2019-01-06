@@ -32,6 +32,15 @@ class PositionService
         return $this->getPositionsByCompanyId($companyId);
     }
 
+    /**
+     * @param int $companyId
+     *
+     * @return mixed
+     */
+    public function getPositionByIdAndCompanyId(int $id, int $companyId)
+    {
+        return Position::where([['company_id', $companyId], ['id', $id]])->first();
+    }
 
     /**
      * @param int $companyId

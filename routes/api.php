@@ -37,7 +37,8 @@ $api->version('v1', function ($api) {
 
             // POSITIONS WITH COMPANY ID
             $api->group(['prefix' => '/{id}/positions'], function ($api) {
-                $api->get('/get', 'PositionController@getCompanyPositions');
+                $api->get('/get', 'PositionController@getPositions');
+                $api->get('{positionId}/delete', 'PositionController@deletePositions');
             });
 
             // POSITIONS
