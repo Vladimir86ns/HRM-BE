@@ -42,4 +42,9 @@ class Company extends Model
     {
         return $this->hasMany(Department::class);
     }
+
+    public function positions()
+    {
+        return $this->hasMany(Position::class);
+    }
 }

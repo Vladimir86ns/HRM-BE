@@ -35,6 +35,11 @@ $api->version('v1', function ($api) {
             $api->patch('/{id}', 'CompanyController@updateCompanyInfo');
             $api->post('save_company_settings', 'CompanyController@saveCompanyInfo');
 
+            // POSITIONS WITH COMPANY ID
+            $api->group(['prefix' => '/{id}/positions'], function ($api) {
+                $api->get('/get', 'PositionController@getCompanyPositions');
+            });
+
             // POSITIONS
             $api->group(['prefix' => 'positions'], function ($api) {
                 $api->post('/save', 'PositionController@bulkSave');

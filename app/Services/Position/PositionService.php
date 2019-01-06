@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 class PositionService
 {
+    const GET_POSITIONS_NUMBER_PER_PAGE = 10;
+
     /**
      * @param array $attributes
      *
@@ -39,5 +41,16 @@ class PositionService
     public function getPositionsByCompanyId(int $companyId)
     {
         return Position::where('company_id', $companyId)->get();
+    }
+
+    /**
+     * Get all company positions.
+     *
+     * @param $companyId
+     * @return mixed
+     */
+    public function getAllCompanyPositionsAsPaginator($companyId)
+    {
+        return Position::where('company_id', $companyId)->paginate(self::GET_POSITIONS_NUMBER_PER_PAGE);
     }
 }
