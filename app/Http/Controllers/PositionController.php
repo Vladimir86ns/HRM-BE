@@ -66,10 +66,11 @@ class PositionController extends Controller
     /**
      * Bulk save positions.
      *
+     * @param $id Company ID
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|string
      */
-    public function bulkSave(Request $request)
+    public function bulkSave($id, Request $request)
     {
         $inputs = $request->all();
         $errors = $this->validator->positionCreateValidatorRulesAndCustomValidators(
@@ -126,8 +127,14 @@ class PositionController extends Controller
         $position = $this->validator->getAndValidatePositionByIdAndCompanyId($positionId, $id);
         $position->delete();
 
+        $paginator = $this->service->getAllCompanyPositionsAsPaginator($id);
+        $positions = $paginator->getCollection();
+
+        $result = new Collection($positions, $this->transformer);
+        $result->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
         return response(
-            $positionId,
+            $this->fractal->createData($result)->toArray(),
             Response::HTTP_OK
         );
     }
