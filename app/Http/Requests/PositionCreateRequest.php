@@ -29,7 +29,7 @@ class PositionCreateRequest extends FormRequest
             'account_id' => 'required',
 
             'positions.*.names' => 'required',
-            'positions.*.names.*' => 'required|min:1',
+            'positions.*.names.*' => 'required|min:1|max:100',
             'positions.*.department_name' => 'required|exists:departments,name',
             'positions.*.company_name' => 'required|exists:companies,name',
             'positions.*.department_id' => 'required|exists:departments,id',
