@@ -19,11 +19,13 @@ class PositionService
         DB::transaction(function () use ($attributes) {
             foreach ($attributes['positions'] as $position) {
                 foreach ($position['names'] as $name) {
-                    Position::create([
-                        'name' => $name,
-                        'company_id' => $position['company_id'],
-                        'department_id' => $position['department_id']
-                    ]);
+                    if ($name) {
+                        Position::create([
+                            'name' => $name,
+                            'company_id' => $position['company_id'],
+                            'department_id' => $position['department_id']
+                        ]);
+                    }
                 }
             }
         });
