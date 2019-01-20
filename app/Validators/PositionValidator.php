@@ -69,6 +69,23 @@ class PositionValidator
         $this->checkNameAlreadyExistForGivenDepartment($positions);
     }
 
+
+    /**
+     * Validate update position, and all other custom validations.
+     *
+     * @param array $data
+     * @param $validator
+     * @return mixed
+     */
+    public function positionUpdateValidatorRulesAndCustomValidators(array $data, $validator)
+    {
+        $errors = $this->validateData($data, $validator);
+
+        if ($errors) {
+            return $errors;
+        }
+    }
+
     /**
      * Check does name already exist for given department name.
      *

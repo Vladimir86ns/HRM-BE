@@ -64,4 +64,18 @@ class PositionService
     {
         return Position::where('company_id', $companyId)->paginate(self::GET_POSITIONS_NUMBER_PER_PAGE);
     }
+
+    /**
+     * Update position
+     *
+     * @param Position $position
+     * @param array    $inputs
+     *
+     * @return Position
+     */
+    public function update(Position $position,array $inputs)
+    {
+        $position->update($inputs);
+        return $position;
+    }
 }

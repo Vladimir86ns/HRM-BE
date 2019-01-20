@@ -38,6 +38,7 @@ $api->version('v1', function ($api) {
             // POSITION WITH COMPANY ID
             $api->group(['prefix' => '/{id}/position'], function ($api) {
                 $api->get('{positionId}/delete', 'PositionController@deletePositions');
+                $api->patch('/{positionId}/update', 'PositionController@update');
             });
 
             // POSITIONS WITH COMPANY ID
