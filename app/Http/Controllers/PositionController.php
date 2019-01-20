@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PositionCreateRequest;
+use App\Http\Requests\PositionUpdateRequest;
 use App\Services\Position\PositionService;
 use App\Transformers\Position\PositionTransformer;
 use App\Validators\CompanyValidator;
@@ -137,5 +138,31 @@ class PositionController extends Controller
             $this->fractal->createData($result)->toArray(),
             Response::HTTP_OK
         );
+    }
+
+    /**
+     * Update position
+     *
+     * @param         $id
+     * @param         $positionId
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function update($id, $positionId, Request $request)
+    {
+        $inputs = $request->all();
+        $position = $this->validator->getAndValidatePositionByIdAndCompanyId($positionId, $id);
+
+        $errors = $this->validator->positionUpdateValidatorRulesAndCustomValidators(
+            $inputs,
+            new PositionUpdateRequest($id, $positionId, $position->department_id)
+        );
+
+        if ($errors) {
+            return response($errors, Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        return $this->service->update($position, $inputs);
     }
 }
