@@ -71,11 +71,10 @@ class PositionService
      * @param Position $position
      * @param array    $inputs
      *
-     * @return Position
+     * @return boolean
      */
-    public function update(Position $position,array $inputs)
+    public function update(Position $position, array $inputs)
     {
-        $position->update($inputs);
-        return $position;
+        return $position->update($inputs);
     }
 }

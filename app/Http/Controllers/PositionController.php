@@ -143,8 +143,8 @@ class PositionController extends Controller
     /**
      * Update position
      *
-     * @param         $id
-     * @param         $positionId
+     * @param         $id Company ID
+     * @param         $positionId Position ID
      * @param Request $request
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
@@ -159,10 +159,22 @@ class PositionController extends Controller
             new PositionUpdateRequest($id, $positionId, $position->department_id)
         );
 
-        if ($errors) {
-            return response($errors, Response::HTTP_NOT_ACCEPTABLE);
+        // because of validation message on front, easier is to return as exception with validation message
+        if ($errors && array_key_exists('name', $errors)) {
+            abort(Response::HTTP_NOT_ACCEPTABLE, $errors['name'][0]);
         }
 
-        return $this->service->update($position, $inputs);
+        $this->service->update($position, $inputs);
+
+        $paginator = $this->service->getAllCompanyPositionsAsPaginator($id);
+        $positions = $paginator->getCollection();
+
+        $result = new Collection($positions, $this->transformer);
+        $result->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response(
+            $this->fractal->createData($result)->toArray(),
+            Response::HTTP_OK
+        );
     }
 }
