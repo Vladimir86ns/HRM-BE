@@ -2,7 +2,6 @@
 
 namespace App\Validators;
 
-use App\Company;
 use App\Department;
 use App\Position;
 use App\Services\Position\PositionService;
@@ -134,23 +133,6 @@ class PositionValidator
 
         if ($allDuplicatedNames) {
             abort(Response::HTTP_NOT_ACCEPTABLE, implode("     ", $allDuplicatedNames));
-        }
-    }
-
-    /**
-     * Check does company belongs to given company id.
-     *
-     * @param array $data
-     */
-    private function checkDoesCompanyBelongsToAccount(array $data)
-    {
-        $company = Company::where([
-                ['id', $data['company_id']],
-                ['account_id', $data['account_id']]
-            ])->exists();
-
-        if (!$company) {
-            abort(Response::HTTP_NOT_ACCEPTABLE, "Company does not belong to given account!");
         }
     }
 

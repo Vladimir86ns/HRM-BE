@@ -46,6 +46,11 @@ $api->version('v1', function ($api) {
                 $api->post('/save', 'PositionController@bulkSave');
                 $api->get('/get', 'PositionController@getPositions');
             });
+
+            // DEPARTMENTS WITH COMPANY ID
+            $api->group(['prefix' => '/{id}/departments'], function ($api) {
+                $api->post('/save', 'DepartmentController@bulkSave');
+            });
         });
 
         // USER
