@@ -169,6 +169,10 @@ class PositionController extends Controller
         $paginator = $this->service->getAllCompanyPositionsAsPaginator($id);
         $positions = $paginator->getCollection();
 
+        if (!$positions) {
+            return response([ 'data' => []], Response::HTTP_OK);
+        }
+
         $result = new Collection($positions, $this->transformer);
         $result->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
