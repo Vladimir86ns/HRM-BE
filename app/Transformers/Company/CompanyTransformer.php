@@ -3,7 +3,7 @@
 namespace App\Transformers\Company;
 
 use App\Company;
-use App\Transformers\Account\DepartmentTransformer;
+use App\Transformers\Department\DepartmentTransformer;
 use App\Transformers\Locaton\LocationTransformer;
 use League\Fractal\TransformerAbstract;
 
